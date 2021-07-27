@@ -1,0 +1,5 @@
+node_modules/
+dist/
+pickems_data/
+.env
+!.env.example

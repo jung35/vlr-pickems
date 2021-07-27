@@ -1,0 +1,17 @@
+{
+  "extends": "../cypress.json",
+  "env": {
+    "main": "https://www.vlr.gg/event/576/champions-tour-north-america-stage-3-challengers-2",
+    "pickem_url": "https://www.vlr.gg/event/pickem/576/champions-tour-north-america-stage-3-challengers-2",
+    "pickems": [
+      {
+        "user": "Jung",
+        "url": "https://www.vlr.gg/pickem/951bf894"
+      },
+      {
+        "user": "test",
+        "url": "https://www.vlr.gg/pickem/bdb5f482"
+      }
+    ]
+  }
+}

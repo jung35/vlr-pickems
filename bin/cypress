@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+cd ${SCRIPTPATH}/..
+./node_modules/.bin/cypress ${1:-run} --quiet --config-file ${@:2}
