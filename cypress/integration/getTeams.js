@@ -36,7 +36,7 @@ describe("Tourney Overview page", () => {
         bracket.push(match_object);
       })
       .then(() => {
-        cy.saveBracket("original", bracket);
+        cy.saveBracket("../original", bracket);
       });
   });
 });

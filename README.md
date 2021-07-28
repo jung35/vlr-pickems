@@ -1,3 +1,4 @@
 ```sh
-bin/cypress run config/example.json
+docker compose build
+docker compose up
 ```

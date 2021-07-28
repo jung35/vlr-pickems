@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "noEmit": true,
-    "declaration": true,
-    "allowJs": true,
-    "removeComments": false,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "declarationDir": "dist",
     "outDir": "dist"
   },
-  "include": ["discord/main.ts"]
+  "include": ["discord/*"]
 }

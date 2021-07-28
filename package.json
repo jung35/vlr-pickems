@@ -2,14 +2,17 @@
   "name": "vlr-pickems",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
+  "type": "commonjs",
   "scripts": {
-    "build": "tsc discord/main.ts",
-    "watch": "tsc -w discord/main.ts"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "node dist/main.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
     "cypress": "^8.0.0",
