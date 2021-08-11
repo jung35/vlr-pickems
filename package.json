@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "node dist/main.js"
+    "start": "forever start dist/main.js"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "forever": "^4.0.1",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5",
     "winston": "^3.3.3",
