@@ -22,8 +22,8 @@ export default async function updateSlashCommands(): Promise<boolean> {
   try {
     winston.info("Started refreshing application (/) commands.");
 
-    // await rest.put(Routes.applicationGuildCommands(CLIENT_ID, process.env.GUILD_ID as string), {
-    await rest.put(Routes.applicationCommands(CLIENT_ID), {
+    await rest.put(Routes.applicationGuildCommands(CLIENT_ID, process.env.GUILD_ID as string), {
+      // await rest.put(Routes.applicationCommands(CLIENT_ID), {
       body: [stats_command, update_command, use_command, config_command, slash_command],
     });
 

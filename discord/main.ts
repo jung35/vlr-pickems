@@ -12,11 +12,10 @@ import updateSlashCommands from "./updateSlashCommands";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const jung = "119923417892913154";
+const UPDATE_SLASH = process.env.UPDATE_SLASH === "true";
 
 client.on("ready", async () => {
   winston.info(`Discord bot ready: ${client.user?.tag}`);
-
-  const status = await updateSlashCommands();
 
   try {
     const jung_user = await client.users.fetch(jung);
@@ -25,10 +24,14 @@ client.on("ready", async () => {
 
     dm_channel.send(`Discord bot ready`);
 
-    if (status) {
-      dm_channel.send(`Slash command update success`);
-    } else {
-      dm_channel.send("Slash command update failed");
+    if (UPDATE_SLASH) {
+      const status = await updateSlashCommands();
+
+      if (status) {
+        dm_channel.send(`Slash command update success`);
+      } else {
+        dm_channel.send("Slash command update failed");
+      }
     }
   } catch (error) {
     winston.info("Could not find admin user to send DM to");
