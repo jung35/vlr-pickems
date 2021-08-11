@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "forever start dist/main.js"
+    "start": "node dist/main.js",
+    "forever": "forever"
   },
   "author": "",
   "license": "ISC",
