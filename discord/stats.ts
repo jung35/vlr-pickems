@@ -17,10 +17,8 @@ export async function getStats(): Promise<null | StatsObject[]> {
 
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
-
-    const user_stats = { user, points: 0 };
-
     const pickem = pickems[user];
+    const user_stats = { user, points: 0 }; // initialize user stats object
 
     for (let j = 0; j < pickem.length; j++) {
       const match = pickem[j];

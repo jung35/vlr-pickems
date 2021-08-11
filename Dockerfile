@@ -1,4 +1,4 @@
-FROM node:15-buster
+FROM node:16-buster
 WORKDIR /usr/src/app
 
 RUN apt-get update

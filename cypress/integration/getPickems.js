@@ -1,4 +1,5 @@
 import getBracket from "../support/getBracket";
+import * as winston from "winston";
 
 describe("Tourney Pickem pages", () => {
   const pickems = Cypress.env("pickems");
@@ -13,14 +14,9 @@ describe("Tourney Pickem pages", () => {
         .each((match_el, i) => {
           const match_object = getBracket(match_el);
 
-          cy.log(`Match #${i}`, match_object.teams);
-          cy.log("id", match_object.id, match_object.next);
-          cy.log(
-            `Prediction`,
-            match_object.winner,
-            `Points`,
-            match_object.points
-          );
+          winston.info(`getPickems Match #${i} match_object.teams`);
+          winston.info(`getPickems id ${match_object.id}, ${match_object.next}`);
+          winston.info(`getPickems Prediction: ${match_object.winner}, Points ${match_object.points}`);
 
           bracket.push(match_object);
         })

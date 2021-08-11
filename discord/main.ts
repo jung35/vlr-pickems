@@ -1,76 +1,106 @@
 import dotenv from "dotenv";
 dotenv.config();
+import "./logger";
+import * as winston from "winston";
 
-import Discord from "discord.js";
+import { Client, Intents, Permissions } from "discord.js";
 import { getSettings, updateSettings } from "./settings";
 import { getStats, statsToString } from "./stats";
 import { runCypress } from "./cypress";
+import updateSlashCommands from "./updateSlashCommands";
 
-const client = new Discord.Client();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-client.on("ready", () => {
-  console.log("I am ready!");
+const jung = "119923417892913154";
+
+client.on("ready", async () => {
+  winston.info(`Discord bot ready: ${client.user?.tag}`);
+
+  const status = await updateSlashCommands();
+
+  try {
+    const jung_user = await client.users.fetch(jung);
+    winston.info("Found admin user to send DM to");
+    const dm_channel = await jung_user.createDM();
+
+    dm_channel.send(`Discord bot ready`);
+
+    if (status) {
+      dm_channel.send(`Slash command update success`);
+    } else {
+      dm_channel.send("Slash command update failed");
+    }
+  } catch (error) {
+    winston.info("Could not find admin user to send DM to");
+  }
 });
 
-client.on("message", async (message) => {
-  if (!message.guild) {
+client.on("interactionCreate", async (interaction) => {
+  const user = interaction.user;
+
+  if (!interaction.isCommand() || (!interaction.inGuild() && user.id !== jung)) {
     return;
   }
 
-  const member = message.member;
-  const user = member?.user;
-  const args = message.content.split(" ");
+  const options = interaction.options;
 
-  const is_admin = user && !user.bot && member?.hasPermission("ADMINISTRATOR");
+  const is_admin =
+    user.id === jung || (interaction.member?.permissions as Readonly<Permissions>).has(Permissions.FLAGS.ADMINISTRATOR);
   const settings = await getSettings();
 
-  switch (args[0].toLowerCase()) {
-    case "/stats":
-      message.channel.send(statsToString(await getStats()));
-      break;
-    case "/update":
-      if (!is_admin) {
-        return;
-      }
+  winston.info(`@${user?.username}: ${interaction.commandName} ${options.data.join(" ")}`);
 
-      message.reply("Running updater");
+  if (interaction.commandName === "stats") {
+    interaction.reply(statsToString(await getStats()));
+  } else if (interaction.commandName === "update") {
+    if (!is_admin) {
+      winston.info("User has no permission to run this command");
 
-      try {
-        await runCypress();
-        message.reply("Updated successfully");
-      } catch (error) {
-        message.reply("There was an error trying to update");
-      }
+      return;
+    }
+    await interaction.reply("Running updater");
 
-      break;
-    case "/use":
-      if (!is_admin) {
-        return;
-      }
+    try {
+      await runCypress();
+      await interaction.editReply("Updated successfully");
+    } catch (error) {
+      await interaction.editReply("There was an error trying to update");
+    }
+  } else if (interaction.commandName === "use") {
+    if (!is_admin) {
+      winston.info("User has no permission to run this command");
 
-      if (args.length === 1) {
-        message.reply(`Using: ${settings.use}`);
-      } else {
-        // i hate me for using switch case with linting a little bit
-        message.reply(`Using: ${(await updateSettings("use", args[1])).use}`);
-      }
+      return;
+    }
 
-      break;
-    case "/config":
-      if (!is_admin) {
-        return;
-      }
+    const use_config = interaction.options.getString("config");
 
-      // just do this manually why build command for it wtf
-      switch (args[1].toLowerCase()) {
-        case "create":
-        case "update":
-        case "add-user":
-        case "delete-user":
-          message.reply("u thot");
-      }
+    if (!use_config) {
+      interaction.reply(`Using: ${settings.use}`);
+    } else {
+      // i hate me for using switch case with linting a little bit
+      interaction.reply(`Using: ${(await updateSettings("use", use_config)).use}`);
+    }
+  } else if (interaction.commandName === "config") {
+    if (!is_admin) {
+      winston.info("User has no permission to run this command");
 
-      break;
+      return;
+    }
+  } else if (interaction.commandName === "update-slash-command") {
+    if (!is_admin) {
+      winston.info("User has no permission to run this command");
+
+      return;
+    }
+
+    const status = await updateSlashCommands();
+
+    if (status) {
+      interaction.reply("Slash command update success");
+    } else {
+      interaction.reply("Slash command update failed");
+    }
   }
 });
 

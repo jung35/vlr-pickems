@@ -1,4 +1,5 @@
 import getBracket from "../support/getBracket";
+import * as winston from "winston";
 
 describe("Tourney Overview page", () => {
   it("Gets list of teams playing", () => {
@@ -12,7 +13,7 @@ describe("Tourney Overview page", () => {
         const team_id = team_el.attr("href").match(/\/(?<id>\d+)\//);
         const team_object = { id: team_id.groups.id, name: team_name };
 
-        cy.log(team_object);
+        winston.info("getTeams", { team_object });
         teams.push(team_object);
       })
       .then(() => {
@@ -29,9 +30,9 @@ describe("Tourney Overview page", () => {
       .each((match_el, i) => {
         const match_object = getBracket(match_el, "original");
 
-        cy.log(`Match #${i}`, match_object.teams);
-        cy.log("id", match_object.id, match_object.next);
-        cy.log(`Winner`, match_object.winner);
+        winston.info(`getTeams Match #${i} ${match_object.teams}`);
+        winston.info(`getTeams id ${match_object.id}, ${match_object.next}`);
+        winston.info(`getTeams Winner ${match_object.winner}`);
 
         bracket.push(match_object);
       })
