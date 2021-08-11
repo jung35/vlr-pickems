@@ -9,7 +9,7 @@ const slash_command = new SlashCommandBuilder().setName("update-slash-command").
 const stats_command = new SlashCommandBuilder().setName("stats").setDescription("List user stats");
 const update_command = new SlashCommandBuilder().setName("update").setDescription("Update points");
 const use_command = new SlashCommandBuilder()
-  .setName("use")
+  .setName("config")
   .setDescription("See or select config to use")
   .addStringOption((option) =>
     option.setName("config_name").setDescription("Change the config being used").setRequired(false)
