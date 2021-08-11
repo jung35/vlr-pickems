@@ -38,7 +38,14 @@ client.on("ready", async () => {
 client.on("interactionCreate", async (interaction) => {
   const user = interaction.user;
 
-  if (!interaction.isCommand() || (!interaction.inGuild() && user.id !== jung)) {
+  if (!interaction.isCommand()) {
+    return;
+  }
+
+  if (!interaction.inGuild() && user.id !== jung) {
+    winston.info("User has no permission to send private message");
+    interaction.reply({ content: "You have no permission", ephemeral: true });
+
     return;
   }
 
@@ -54,7 +61,8 @@ client.on("interactionCreate", async (interaction) => {
     interaction.reply(statsToString(await getStats()));
   } else if (interaction.commandName === "update") {
     if (!is_admin) {
-      winston.info("User has no permission to run this command");
+      winston.info("User does not have permission");
+      interaction.reply({ content: "You have no permission", ephemeral: true });
 
       return;
     }
@@ -68,7 +76,8 @@ client.on("interactionCreate", async (interaction) => {
     }
   } else if (interaction.commandName === "use") {
     if (!is_admin) {
-      winston.info("User has no permission to run this command");
+      winston.info("User does not have permission");
+      interaction.reply({ content: "You have no permission", ephemeral: true });
 
       return;
     }
@@ -83,13 +92,15 @@ client.on("interactionCreate", async (interaction) => {
     }
   } else if (interaction.commandName === "config") {
     if (!is_admin) {
-      winston.info("User has no permission to run this command");
+      winston.info("User does not have permission");
+      interaction.reply({ content: "You have no permission", ephemeral: true });
 
       return;
     }
   } else if (interaction.commandName === "update-slash-command") {
     if (!is_admin) {
-      winston.info("User has no permission to run this command");
+      winston.info("User does not have permission");
+      interaction.reply({ content: "You have no permission", ephemeral: true });
 
       return;
     }

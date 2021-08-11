@@ -97,5 +97,5 @@ export function statsToString(stats_list: null | StatsObject[]): string {
     }
   }
 
-  return output;
+  return output.length > 0 ? output : "No stats";
 }
