@@ -1,20 +1,11 @@
 import fs from "fs/promises";
 import { getSettings } from "./settings";
-import {
-  LiveBracketInfo,
-  UserDisplayStats,
-  UserPickemBracketInfo,
-  ValorantTeam,
-} from "./types";
+import { LiveBracketInfo, UserDisplayStats, UserPickemBracketInfo, ValorantTeam } from "./types";
 
 const data_dir = "pickems_data/";
 
 export async function getStats(): Promise<null | UserDisplayStats[]> {
-  const [teams, original, pickems] = await Promise.all([
-    getTeams(),
-    getOriginalBracket(),
-    getUserBrackets(),
-  ]);
+  const [teams, original, pickems] = await Promise.all([getTeams(), getOriginalBracket(), getUserBrackets()]);
 
   if (!teams || !original || !pickems) {
     return null;
@@ -54,10 +45,7 @@ async function getTeams(): Promise<null | ValorantTeam[]> {
   const settings = await getSettings();
 
   try {
-    const raw_teams = await fs.readFile(
-      data_dir + settings.use + "/teams.json",
-      "utf-8"
-    );
+    const raw_teams = await fs.readFile(data_dir + settings.use + "/teams.json", "utf-8");
 
     return JSON.parse(raw_teams) as ValorantTeam[];
   } catch (error) {
@@ -69,10 +57,7 @@ async function getOriginalBracket(): Promise<null | LiveBracketInfo[]> {
   const settings = await getSettings();
 
   try {
-    const raw_original_bracket = await fs.readFile(
-      data_dir + settings.use + "/original.json",
-      "utf-8"
-    );
+    const raw_original_bracket = await fs.readFile(data_dir + settings.use + "/original.json", "utf-8");
 
     return JSON.parse(raw_original_bracket) as LiveBracketInfo[];
   } catch (error) {
@@ -93,10 +78,7 @@ async function getUserBrackets(): Promise<null | {
     for (const file of files) {
       const user_match = file.match(/^(?<user>.*)\.json$/);
       const user = user_match?.groups?.user || "unknown";
-      const raw_user_bracket = await fs.readFile(
-        files_dir + "/" + file,
-        "utf-8"
-      );
+      const raw_user_bracket = await fs.readFile(files_dir + "/" + file, "utf-8");
       pickems[user] = JSON.parse(raw_user_bracket) as UserPickemBracketInfo[];
     }
 

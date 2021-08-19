@@ -9,13 +9,9 @@ import { slash_command as stats_command } from "./statsCommand";
 import { slash_command as update_command } from "./updateCommand";
 import { slash_command as use_command } from "./useCommand";
 import { slash_command as config_command } from "./configCommand";
-export const slash_command = new SlashCommandBuilder()
-  .setName("update-slash-command")
-  .setDescription("Nahnahnahnah");
+export const slash_command = new SlashCommandBuilder().setName("update-slash-command").setDescription("Nahnahnahnah");
 
-export default async function slashCommand(
-  interaction: CommandInteraction
-): Promise<void> {
+export default async function slashCommand(interaction: CommandInteraction): Promise<void> {
   const is_admin = checkAdmin(interaction);
 
   if (!is_admin) {
@@ -39,14 +35,7 @@ const CLIENT_ID = process.env.CLIENT_ID as string;
 const GUILD_ID = process.env.GUILD_ID as null | string;
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
-const commands_list = [
-  stats_command,
-  update_command,
-  use_command,
-  config_command,
-  slash_command,
-];
-// await rest.put(Routes.applicationCommands(CLIENT_ID), {
+const commands_list = [stats_command, update_command, use_command, config_command, slash_command];
 
 export async function updateSlashCommands(): Promise<boolean> {
   let url: string = Routes.applicationCommands(CLIENT_ID);

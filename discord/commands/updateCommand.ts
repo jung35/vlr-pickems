@@ -20,14 +20,10 @@ export const slash_command = new SlashCommandBuilder()
       .addChoice("Pickem Brackets (Does not update points)", "pickems")
   );
 
-let update_promise: null | Promise<
-  | CypressCommandLine.CypressRunResult
-  | CypressCommandLine.CypressFailedRunResult
-> = null;
+let update_promise: null | Promise<CypressCommandLine.CypressRunResult | CypressCommandLine.CypressFailedRunResult> =
+  null;
 
-export default async function updateCommand(
-  interaction: CommandInteraction
-): Promise<void> {
+export default async function updateCommand(interaction: CommandInteraction): Promise<void> {
   const is_admin = checkAdmin(interaction);
   if (!is_admin) {
     winston.info("User does not have permission");
@@ -36,9 +32,7 @@ export default async function updateCommand(
     return;
   }
 
-  const action = interaction.options.getString(
-    "action"
-  ) as null | CypressUpdateType;
+  const action = interaction.options.getString("action") as null | CypressUpdateType;
 
   if (!action) {
     winston.info("No action found");

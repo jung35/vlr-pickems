@@ -7,10 +7,7 @@ function loadConfig(filename: string): ConfigOptions {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const configJson: ConfigOptions = require(filename);
   if (configJson.extends) {
-    const baseConfigFilename = path.join(
-      path.dirname(filename),
-      configJson.extends
-    );
+    const baseConfigFilename = path.join(path.dirname(filename), configJson.extends);
     const baseConfig = loadConfig(baseConfigFilename);
     console.log("merging %s with %s", baseConfigFilename, filename);
 

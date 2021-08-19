@@ -18,19 +18,14 @@ export default function getBracket(
   const team2_id = team2_el.data("teamId");
 
   const status_el = match_el.find(".bracket-item-status");
-  const status = status_el.text().match(/(?<points_max>\d+)$/)
-    ?.groups?.points_max;
+  const status = status_el.text().match(/(?<points_max>\d+)$/)?.groups?.points_max;
   const points = parseInt(status || "");
 
   return {
     id: parseInt(id),
     next: { winner: next_id || undefined, loser: next_id2 || undefined },
     teams: [team1_id, team2_id],
-    winner: team1_el.hasClass(selected)
-      ? team1_id
-      : team2_el.hasClass(selected)
-      ? team2_id
-      : -1,
+    winner: team1_el.hasClass(selected) ? team1_id : team2_el.hasClass(selected) ? team2_id : -1,
     max_points: style === "original" ? points : undefined,
   };
 }

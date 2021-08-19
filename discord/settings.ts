@@ -21,10 +21,7 @@ export async function getSettings(): Promise<AppSettings> {
 
 // Imagine reading file everytime we wanna change key value
 // File storages are the best. No one can change my mind
-export async function updateSettings(
-  key: keyof AppSettings,
-  value: string
-): Promise<AppSettings> {
+export async function updateSettings(key: keyof AppSettings, value: string): Promise<AppSettings> {
   const settings = await getSettings();
   const old_value: undefined | string = settings[key];
   settings[key] = value;

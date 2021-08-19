@@ -11,10 +11,7 @@ describe("Tourney Pickems page", () => {
 
     cy.get(".bracket-item.mod-pickem")
       .each((match_el, i) => {
-        const match_object = getBracket(
-          match_el,
-          "original"
-        ) as LiveBracketInfo;
+        const match_object = getBracket(match_el, "original") as LiveBracketInfo;
 
         cy.log(`LiveBracket Match #${i} ${match_object.teams}`);
         cy.log(`LiveBracket id ${match_object.id}, ${match_object.next}`);

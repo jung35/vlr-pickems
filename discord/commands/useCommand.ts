@@ -8,15 +8,10 @@ export const slash_command = new SlashCommandBuilder()
   .setName("use")
   .setDescription("See or select config to use")
   .addStringOption((option) =>
-    option
-      .setName("config")
-      .setDescription("Change the config being used")
-      .setRequired(false)
+    option.setName("config").setDescription("Change the config being used").setRequired(false)
   );
 
-export default async function useCommand(
-  interaction: CommandInteraction
-): Promise<void> {
+export default async function useCommand(interaction: CommandInteraction): Promise<void> {
   const is_admin = checkAdmin(interaction);
 
   if (!is_admin) {

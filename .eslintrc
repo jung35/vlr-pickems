@@ -3,9 +3,9 @@
   "env": { "es6": true, "jest": true },
   "extends": [
     "eslint:recommended",
-    "plugin:prettier/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parserOptions": { "sourceType": "module" },
   "plugins": ["@typescript-eslint", "prettier"],
@@ -59,6 +59,6 @@
     "no-warning-comments": "warn",
     "no-fallthrough": "off",
     "require-atomic-updates": "off",
-    "@typescript-eslint/triple-slash-reference": { "path": "always" }
+    "@typescript-eslint/triple-slash-reference": "off"
   }
 }
