@@ -7,8 +7,7 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "parserOptions": {    "sourceType": "module"
-  },
+  "parserOptions": { "sourceType": "module" },
   "plugins": ["@typescript-eslint", "prettier"],
   "globals": {
     "cy": true,
@@ -59,6 +58,7 @@
     "prefer-const": "error",
     "no-warning-comments": "warn",
     "no-fallthrough": "off",
-    "require-atomic-updates": "off"
+    "require-atomic-updates": "off",
+    "@typescript-eslint/triple-slash-reference": { "path": "always" }
   }
 }

@@ -1,11 +1,20 @@
 import fs from "fs/promises";
 import { getSettings } from "./settings";
-import { BracketObject, StatsObject, TeamsObject, UserBracketObject } from "./types";
+import {
+  LiveBracketInfo,
+  UserDisplayStats,
+  UserPickemBracketInfo,
+  ValorantTeam,
+} from "./types";
 
 const data_dir = "pickems_data/";
 
-export async function getStats(): Promise<null | StatsObject[]> {
-  const [teams, original, pickems] = await Promise.all([getTeams(), getOriginalBracket(), getUserBrackets()]);
+export async function getStats(): Promise<null | UserDisplayStats[]> {
+  const [teams, original, pickems] = await Promise.all([
+    getTeams(),
+    getOriginalBracket(),
+    getUserBrackets(),
+  ]);
 
   if (!teams || !original || !pickems) {
     return null;
@@ -13,7 +22,7 @@ export async function getStats(): Promise<null | StatsObject[]> {
 
   const users = Object.keys(pickems);
 
-  const stats_list: StatsObject[] = [];
+  const stats_list: UserDisplayStats[] = [];
 
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
@@ -21,10 +30,13 @@ export async function getStats(): Promise<null | StatsObject[]> {
     const user_stats = { user, points: 0 }; // initialize user stats object
 
     for (let j = 0; j < pickem.length; j++) {
-      const match = pickem[j];
+      const pickem_match = pickem[j];
+      const original_match = original.find(function (match) {
+        return match.id === pickem_match.id;
+      });
 
-      if (match.points > 0) {
-        user_stats.points += match.points;
+      if (original_match && pickem_match.winner === original_match.winner) {
+        user_stats.points += original_match.max_points;
       }
     }
 
@@ -38,43 +50,54 @@ export async function getStats(): Promise<null | StatsObject[]> {
   return stats_list;
 }
 
-async function getTeams(): Promise<null | TeamsObject[]> {
+async function getTeams(): Promise<null | ValorantTeam[]> {
   const settings = await getSettings();
 
   try {
-    const raw_teams = await fs.readFile(data_dir + settings.use + "/teams.json", "utf-8");
+    const raw_teams = await fs.readFile(
+      data_dir + settings.use + "/teams.json",
+      "utf-8"
+    );
 
-    return JSON.parse(raw_teams) as TeamsObject[];
+    return JSON.parse(raw_teams) as ValorantTeam[];
   } catch (error) {
     return null;
   }
 }
 
-async function getOriginalBracket(): Promise<null | BracketObject[]> {
+async function getOriginalBracket(): Promise<null | LiveBracketInfo[]> {
   const settings = await getSettings();
 
   try {
-    const raw_original_bracket = await fs.readFile(data_dir + settings.use + "/original.json", "utf-8");
+    const raw_original_bracket = await fs.readFile(
+      data_dir + settings.use + "/original.json",
+      "utf-8"
+    );
 
-    return JSON.parse(raw_original_bracket) as BracketObject[];
+    return JSON.parse(raw_original_bracket) as LiveBracketInfo[];
   } catch (error) {
     return null;
   }
 }
 
-async function getUserBrackets(): Promise<null | { [user: string]: UserBracketObject[] }> {
+async function getUserBrackets(): Promise<null | {
+  [user: string]: UserPickemBracketInfo[];
+}> {
   const settings = await getSettings();
   const files_dir = data_dir + settings.use + "/bracket";
   try {
     const files = await fs.readdir(files_dir);
 
-    const pickems: { [key: string]: UserBracketObject[] } = {};
+    const pickems: { [key: string]: UserPickemBracketInfo[] } = {};
 
     for (const file of files) {
       const user_match = file.match(/^(?<user>.*)\.json$/);
       const user = user_match?.groups?.user || "unknown";
-      const raw_user_bracket = await fs.readFile(files_dir + "/" + file, "utf-8");
-      pickems[user] = JSON.parse(raw_user_bracket) as UserBracketObject[];
+      const raw_user_bracket = await fs.readFile(
+        files_dir + "/" + file,
+        "utf-8"
+      );
+      pickems[user] = JSON.parse(raw_user_bracket) as UserPickemBracketInfo[];
     }
 
     return pickems;
@@ -83,7 +106,7 @@ async function getUserBrackets(): Promise<null | { [user: string]: UserBracketOb
   }
 }
 
-export function statsToString(stats_list: null | StatsObject[]): string {
+export function statsToString(stats_list: null | UserDisplayStats[]): string {
   let output = "";
 
   if (stats_list) {
