@@ -30,7 +30,7 @@ export default async function updateCommand(
 ): Promise<void> {
   const is_admin = checkAdmin(interaction);
   if (!is_admin) {
-    cy.log("User does not have permission");
+    winston.info("User does not have permission");
     interaction.reply({ content: "You have no permission", ephemeral: true });
 
     return;
@@ -41,12 +41,12 @@ export default async function updateCommand(
   ) as null | CypressUpdateType;
 
   if (!action) {
-    cy.log("No action found");
+    winston.info("No action found");
 
     return;
   }
 
-  cy.log(`Updating cypress with: ${action}`);
+  winston.info(`Updating cypress with: ${action}`);
 
   await interaction.deferReply({ ephemeral: true });
 
@@ -70,12 +70,12 @@ export async function runCypress(action: CypressUpdateType): Promise<void> {
   const settings = await getSettings();
 
   if (update_promise) {
-    cy.log("Cypress already running");
+    winston.info("Cypress already running");
 
     throw "already running";
   }
 
-  cy.log("Running Cypress");
+  winston.info("Running Cypress");
 
   const cypress_config: Partial<CypressCommandLine.CypressRunOptions> = {
     configFile: `./config/${settings.use}.json`,
@@ -97,10 +97,10 @@ export async function runCypress(action: CypressUpdateType): Promise<void> {
   update_promise = null;
 
   if ("failures" in result) {
-    cy.log("Cypress Failed");
+    winston.info("Cypress Failed");
 
     throw null;
   }
 
-  cy.log("Cypress Successful");
+  winston.info("Cypress Successful");
 }

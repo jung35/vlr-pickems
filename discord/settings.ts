@@ -7,7 +7,7 @@ const filename = "dist/settings.json";
 export async function getSettings(): Promise<AppSettings> {
   try {
     const raw_settings = await fs.readFile(filename, "utf-8");
-    cy.log("getSettings: SUCCESS");
+    winston.info("getSettings: SUCCESS");
 
     return JSON.parse(raw_settings);
   } catch (error) {
@@ -31,7 +31,7 @@ export async function updateSettings(
 
   try {
     await fs.writeFile(filename, JSON.stringify(settings));
-    cy.log(`updateSettings: SUCCESS [${key}] => ${value}`);
+    winston.info(`updateSettings: SUCCESS [${key}] => ${value}`);
   } catch (error) {
     settings[key] = old_value;
     winston.error("updateSettings: ERROR", error);

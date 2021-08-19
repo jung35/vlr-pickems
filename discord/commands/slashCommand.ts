@@ -19,7 +19,7 @@ export default async function slashCommand(
   const is_admin = checkAdmin(interaction);
 
   if (!is_admin) {
-    cy.log("User does not have permission");
+    winston.info("User does not have permission");
     interaction.reply({ content: "You have no permission", ephemeral: true });
 
     return;
@@ -36,30 +36,31 @@ export default async function slashCommand(
 
 // prevent circular dependency
 const CLIENT_ID = process.env.CLIENT_ID as string;
+const GUILD_ID = process.env.GUILD_ID as null | string;
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
+const commands_list = [
+  stats_command,
+  update_command,
+  use_command,
+  config_command,
+  slash_command,
+];
+// await rest.put(Routes.applicationCommands(CLIENT_ID), {
+
 export async function updateSlashCommands(): Promise<boolean> {
+  let url: string = Routes.applicationCommands(CLIENT_ID);
+
+  if (GUILD_ID) {
+    url = Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID);
+  }
+
   try {
-    cy.log("Started refreshing application (/) commands.");
+    winston.info("Started refreshing application (/) commands.");
 
-    await rest.put(
-      Routes.applicationGuildCommands(
-        CLIENT_ID,
-        process.env.GUILD_ID as string
-      ),
-      {
-        // await rest.put(Routes.applicationCommands(CLIENT_ID), {
-        body: [
-          stats_command,
-          update_command,
-          use_command,
-          config_command,
-          slash_command,
-        ],
-      }
-    );
+    await rest.put(url, { body: commands_list });
 
-    cy.log("Successfully reloaded application (/) commands.");
+    winston.info("Successfully reloaded application (/) commands.");
 
     return true;
   } catch (error) {

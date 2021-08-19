@@ -13,7 +13,7 @@ export default async function configCommand(
   const is_admin = checkAdmin(interaction);
 
   if (!is_admin) {
-    cy.log("User does not have permission");
+    winston.info("User does not have permission");
     interaction.reply({ content: "You have no permission", ephemeral: true });
 
     return;

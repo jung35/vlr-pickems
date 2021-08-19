@@ -27,11 +27,11 @@ const jung = "119923417892913154";
 const UPDATE_SLASH = process.env.UPDATE_SLASH === "true";
 
 client.on("ready", async () => {
-  cy.log(`Discord bot ready: ${client.user?.tag}`);
+  winston.info(`Discord bot ready: ${client.user?.tag}`);
 
   try {
     const jung_user = await client.users.fetch(jung);
-    cy.log("Found admin user to send DM to");
+    winston.info("Found admin user to send DM to");
     const dm_channel = await jung_user.createDM();
 
     dm_channel.send(`Discord bot ready`);
@@ -46,7 +46,7 @@ client.on("ready", async () => {
       }
     }
   } catch (error) {
-    cy.log("Could not find admin user to send DM to");
+    winston.info("Could not find admin user to send DM to");
   }
 });
 
@@ -58,7 +58,7 @@ client.on("interactionCreate", async (interaction) => {
   }
 
   if (!interaction.inGuild() && user.id !== jung) {
-    cy.log("User has no permission to send private message");
+    winston.info("User has no permission to send private message");
     interaction.reply({ content: "You have no permission", ephemeral: true });
 
     return;
@@ -66,7 +66,7 @@ client.on("interactionCreate", async (interaction) => {
 
   const options = interaction.options;
 
-  cy.log(
+  winston.info(
     `@${user?.username}: ${interaction.commandName} ${options.data.join(" ")}`
   );
 
