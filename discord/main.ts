@@ -3,12 +3,13 @@ dotenv.config();
 import "./logger";
 import * as winston from "winston";
 
-import { Client, Intents } from "discord.js";
+import { Client, CommandInteractionOption, Intents } from "discord.js";
 import useCommand, { slash_command as use_command } from "./commands/useCommand";
 import statsCommand, { slash_command as stats_command } from "./commands/statsCommand";
 import updateCommand, { slash_command as update_command } from "./commands/updateCommand";
 import configCommand, { slash_command as config_command } from "./commands/configCommand";
 import slashCommand, { updateSlashCommands, slash_command } from "./commands/slashCommand";
+import addUserCommand, { slash_command as add_user_command } from "./commands/addUserCommand";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -42,32 +43,32 @@ client.on("ready", async () => {
 client.on("interactionCreate", async (interaction) => {
   const user = interaction.user;
 
-  if (!interaction.isCommand()) {
-    return;
-  }
+  if (interaction.isCommand()) {
+    const options = interaction.options;
+    winston.info(`@${user.username}: ${interaction.commandName} ${options.data.map(joinValue).join(" ")}`);
 
-  if (!interaction.inGuild() && user.id !== jung) {
-    winston.info("User has no permission to send private message");
-    interaction.reply({ content: "You have no permission", ephemeral: true });
+    if (interaction.commandName === stats_command.name) {
+      await statsCommand(interaction);
+    } else if (interaction.commandName === update_command.name) {
+      await updateCommand(interaction);
+    } else if (interaction.commandName === use_command.name) {
+      await useCommand(interaction);
+    } else if (interaction.commandName === config_command.name) {
+      await configCommand(interaction);
+    } else if (interaction.commandName === slash_command.name) {
+      await slashCommand(interaction);
+    } else if (interaction.commandName === add_user_command.name) {
+      await addUserCommand(interaction);
+    }
 
-    return;
-  }
-
-  const options = interaction.options;
-
-  winston.info(`@${user?.username}: ${interaction.commandName} ${options.data.join(" ")}`);
-
-  if (interaction.commandName === stats_command.name) {
-    statsCommand(interaction);
-  } else if (interaction.commandName === update_command.name) {
-    updateCommand(interaction);
-  } else if (interaction.commandName === use_command.name) {
-    useCommand(interaction);
-  } else if (interaction.commandName === config_command.name) {
-    configCommand(interaction);
-  } else if (interaction.commandName === slash_command.name) {
-    slashCommand(interaction);
+    if (!interaction.replied) {
+      await interaction.reply({ content: "Something went wrong", ephemeral: true });
+    }
   }
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+function joinValue(option: CommandInteractionOption) {
+  return option.value;
+}

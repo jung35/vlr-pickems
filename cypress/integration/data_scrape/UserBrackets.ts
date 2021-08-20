@@ -1,7 +1,7 @@
-/// <reference path="../support/index.d.ts" />
+/// <reference path="../../support/index.d.ts" />
 
-import getBracket from "../support/getBracket";
-import { UserPickemInfo, UserPickemBracketInfo } from "../../discord/types";
+import getBracket from "../../support/getBracket";
+import { UserPickemInfo, UserPickemBracketInfo } from "../../../discord/types";
 
 describe("User Brackets", () => {
   it("clears out player bracket folder", () => {

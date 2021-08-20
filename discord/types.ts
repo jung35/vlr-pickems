@@ -1,10 +1,14 @@
 export interface UserPickemInfo {
+  user_id: string;
   user: string;
   url: string;
+  updated_at: string;
 }
-
 export interface AppSettings {
   use: string;
+  config_dir: string;
+  data_dir: string;
+  allow_add_user: boolean;
 }
 
 export interface ValorantTeam {
@@ -32,4 +36,9 @@ export interface UserDisplayStats {
   points: number;
 }
 
-export type CypressUpdateType = "all" | "points" | "teams" | "pickems";
+export type CypressUpdateType = "all" | "points" | "teams" | "pickems" | "validate-pickem";
+export type RunCypressOptions = { user_entered_url?: string };
+export interface CypressConfigFile {
+  extends: string;
+  env: { main: string; pickem_url: string; pickems: UserPickemInfo[] };
+}

@@ -3,30 +3,26 @@ import { CommandInteraction } from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import * as winston from "winston";
-import checkAdmin from "../utils/checkAdmin";
+import isAdmin from "../utils/isAdmin";
 
 import { slash_command as stats_command } from "./statsCommand";
 import { slash_command as update_command } from "./updateCommand";
 import { slash_command as use_command } from "./useCommand";
 import { slash_command as config_command } from "./configCommand";
 export const slash_command = new SlashCommandBuilder().setName("update-slash-command").setDescription("Nahnahnahnah");
+import { slash_command as add_user_command } from "./addUserCommand";
 
 export default async function slashCommand(interaction: CommandInteraction): Promise<void> {
-  const is_admin = checkAdmin(interaction);
-
-  if (!is_admin) {
-    winston.info("User does not have permission");
-    interaction.reply({ content: "You have no permission", ephemeral: true });
-
+  if (!(await isAdmin(interaction))) {
     return;
   }
 
   const status = await updateSlashCommands();
 
   if (status) {
-    interaction.reply("Slash command update success");
+    await interaction.reply("Slash command update success");
   } else {
-    interaction.reply("Slash command update failed");
+    await interaction.reply("Slash command update failed");
   }
 }
 
@@ -35,7 +31,7 @@ const CLIENT_ID = process.env.CLIENT_ID as string;
 const GUILD_ID = process.env.GUILD_ID as null | string;
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
-const commands_list = [stats_command, update_command, use_command, config_command, slash_command];
+const commands_list = [stats_command, add_user_command, update_command, use_command, config_command, slash_command];
 
 export async function updateSlashCommands(): Promise<boolean> {
   let url: string = Routes.applicationCommands(CLIENT_ID);

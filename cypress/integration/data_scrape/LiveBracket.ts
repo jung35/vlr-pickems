@@ -1,7 +1,7 @@
-/// <reference path="../support/index.d.ts" />
+/// <reference path="../../support/index.d.ts" />
 
-import getBracket from "../support/getBracket";
-import { LiveBracketInfo } from "../../discord/types";
+import getBracket from "../../support/getBracket";
+import { LiveBracketInfo } from "../../../discord/types";
 
 describe("Tourney Pickems page", () => {
   it("It gets original match-ups", () => {
