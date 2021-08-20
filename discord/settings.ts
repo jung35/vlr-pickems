@@ -9,7 +9,7 @@ export async function getSettings(): Promise<AppSettings> {
     const raw_settings = await fs.readFile(filename, "utf-8");
     winston.info("getSettings: SUCCESS");
 
-    return JSON.parse(raw_settings);
+    return { ...default_settings, ...(JSON.parse(raw_settings) as AppSettings) };
   } catch (error) {
     winston.error("getSettings: ERROR", error);
 
@@ -21,20 +21,25 @@ export async function getSettings(): Promise<AppSettings> {
 
 // Imagine reading file everytime we wanna change key value
 // File storages are the best. No one can change my mind
-export async function updateSettings(key: keyof AppSettings, value: string): Promise<AppSettings> {
-  const settings = await getSettings();
-  const old_value: undefined | string = settings[key];
-  settings[key] = value;
+export async function updateSettings(key: keyof AppSettings, value: unknown): Promise<AppSettings> {
+  let settings = await getSettings();
+  const old_value = settings[key];
+  settings = { ...settings, [key]: value };
 
   try {
     await fs.writeFile(filename, JSON.stringify(settings));
     winston.info(`updateSettings: SUCCESS [${key}] => ${value}`);
   } catch (error) {
-    settings[key] = old_value;
+    settings = { ...settings, [key]: old_value };
     winston.error("updateSettings: ERROR", error);
   }
 
-  return settings;
+  return settings as AppSettings;
 }
 
-const default_settings = { use: "example" };
+const default_settings: AppSettings = {
+  use: "example",
+  config_dir: "config/",
+  data_dir: "pickems_data/",
+  allow_add_user: false,
+};

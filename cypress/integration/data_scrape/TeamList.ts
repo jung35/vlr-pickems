@@ -1,6 +1,6 @@
-/// <reference path="../support/index.d.ts" />
+/// <reference path="../../support/index.d.ts" />
 
-import { ValorantTeam } from "../../discord/types";
+import { ValorantTeam } from "../../../discord/types";
 
 describe("Tourney Overview page", () => {
   it("Gets list of teams playing", () => {
@@ -14,7 +14,7 @@ describe("Tourney Overview page", () => {
         const team_id = team_el.attr("href")?.match(/\/(?<id>\d+)\//);
         const team_object = { id: team_id?.groups?.id || "", name: team_name };
 
-        cy.log("TeamsList", { team_object });
+        cy.log("TeamList", { team_object });
         teams.push(team_object);
       })
       .then(() => {
