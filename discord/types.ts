@@ -2,7 +2,6 @@ export interface UserPickemInfo {
   user_id: string;
   user: string;
   url: string;
-  betting: boolean;
   paid: boolean;
   updated_at: string;
 }
@@ -39,7 +38,7 @@ export interface UserPickemBracketInfo {
 }
 
 export interface UserDisplayStats {
-  user: string;
+  user: undefined | UserPickemInfo;
   points: number;
 }
 

@@ -12,8 +12,8 @@ export const slash_command = new SlashCommandBuilder()
   .addStringOption((option) => option.setName("pickem").setDescription("URL of your pickem").setRequired(true));
 
 const pickem_url_reg = /^(https:\/\/|)(www.|)vlr.gg\/pickem\/(.[^-\\/]*)$/;
-const CHANNEL_ID = process.env.CHANNEL_ID as string;
 const GUILD_ID = process.env.GUILD_ID as string;
+const CHANNEL_ID = process.env.CHANNEL_ID as string;
 
 export default async function addUserCommand(interaction: CommandInteraction): Promise<void> {
   const settings = await getSettings();
@@ -61,7 +61,6 @@ export default async function addUserCommand(interaction: CommandInteraction): P
     user_id: user.id,
     user: user.username,
     url: pickem_url,
-    betting: false,
     paid: false,
     updated_at: new Date().toString(),
   };
@@ -72,6 +71,8 @@ export default async function addUserCommand(interaction: CommandInteraction): P
     await interaction.editReply({ content: "You're added!" });
   } catch (error) {
     await interaction.editReply({ content: "There was an error adding your pickems" });
+
+    return;
   }
 
   try {

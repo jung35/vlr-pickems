@@ -13,7 +13,7 @@ export async function getSettings(): Promise<AppSettings> {
   } catch (error) {
     winston.error("getSettings: ERROR", error);
 
-    await fs.writeFile(filename, JSON.stringify(default_settings));
+    await fs.writeFile(filename, JSON.stringify(default_settings, null, 2));
 
     return default_settings;
   }
@@ -27,7 +27,7 @@ export async function updateSettings(key: keyof AppSettings, value: unknown): Pr
   settings = { ...settings, [key]: value };
 
   try {
-    await fs.writeFile(filename, JSON.stringify(settings));
+    await fs.writeFile(filename, JSON.stringify(settings, null, 2));
     winston.info(`updateSettings: SUCCESS [${key}] => ${value}`);
   } catch (error) {
     settings = { ...settings, [key]: old_value };

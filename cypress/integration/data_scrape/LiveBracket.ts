@@ -29,7 +29,7 @@ describe("Tourney Pickems page", () => {
         groups.push({ group_id, bracket_list: brackets });
       })
       .then(() => {
-        cy.saveBracket("../original", groups);
+        cy.saveBracket<LiveBracketInfo>("../original", groups);
       });
   });
 });

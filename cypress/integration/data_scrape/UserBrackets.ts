@@ -36,7 +36,7 @@ describe("User Brackets", () => {
           groups.push({ group_id, bracket_list: brackets });
         })
         .then(() => {
-          cy.saveBracket(pickem.user, groups);
+          cy.saveBracket<UserPickemBracketInfo>(pickem.user, groups);
         });
     });
   });

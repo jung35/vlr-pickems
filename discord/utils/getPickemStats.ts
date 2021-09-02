@@ -2,12 +2,14 @@ import { UserDisplayStats } from "../types";
 import getTeamList from "./getTeamList";
 import getLiveBracket from "./getLiveBracket";
 import getUserBrackets from "./getUserBrackets";
+import { findByUserName, getAllUserPickemInfo } from "./queueAddUser";
 
 export default async function getPickemStats(): Promise<null | UserDisplayStats[]> {
-  const [teams, original_groups, pickems_users] = await Promise.all([
+  const [teams, original_groups, pickems_users, user_pickem_infos] = await Promise.all([
     getTeamList(),
     getLiveBracket(),
     getUserBrackets(),
+    getAllUserPickemInfo(),
   ]);
 
   if (!teams || !original_groups || !pickems_users) {
@@ -21,7 +23,8 @@ export default async function getPickemStats(): Promise<null | UserDisplayStats[
   for (let i = 0; i < users_names.length; i++) {
     const user_name = users_names[i];
     const pickem_groups = pickems_users[user_name];
-    const user_stats = { user: user_name, points: 0 }; // initialize user stats object
+    const user_pickem_info = user_pickem_infos.find(findByUserName(user_name));
+    const user_stats = { user: user_pickem_info, points: 0 }; // initialize user stats object
 
     for (let j = 0; j < pickem_groups.length; j++) {
       const pickem_group = pickem_groups[j];

@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
-import { ValorantTeam, UserPickemBracketInfo, LiveBracketGroup } from "../../discord/types";
+import { ValorantTeam, LiveBracketGroup } from "../../discord/types";
 
 declare global {
   namespace Cypress {
     interface Chainable {
       saveTeams(teams: ValorantTeam[]): void;
-      saveBracket(filename: string, bracket: LiveBracketGroup[] | UserPickemBracketInfo[]): void;
+      saveBracket<BracketType>(filename: string, bracket: LiveBracketGroup<BracketType>[]): void;
       clearPlayerBrackets(): void;
     }
   }

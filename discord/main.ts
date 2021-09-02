@@ -10,11 +10,13 @@ import updateCommand, { slash_command as update_command } from "./commands/updat
 import configCommand, { slash_command as config_command } from "./commands/configCommand";
 import slashCommand, { updateSlashCommands, slash_command } from "./commands/slashCommand";
 import addUserCommand, { slash_command as add_user_command } from "./commands/addUserCommand";
+import { getSettings } from "./settings";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const jung = "119923417892913154";
-const UPDATE_SLASH = process.env.UPDATE_SLASH === "true";
+const UPDATE_SLASH_ON_START = process.env.UPDATE_SLASH_ON_START === "true";
+const UPDATE_GUILD_SLASH = process.env.UPDATE_GUILD_SLASH === "true";
 
 client.on("ready", async () => {
   winston.info(`Discord bot ready: ${client.user?.tag}`);
@@ -24,17 +26,22 @@ client.on("ready", async () => {
     winston.info("Found admin user to send DM to");
     const dm_channel = await jung_user.createDM();
 
-    dm_channel.send(`Discord bot ready`);
+    await dm_channel.send(`Discord bot ready`);
 
-    if (UPDATE_SLASH) {
+    if (UPDATE_SLASH_ON_START) {
       const status = await updateSlashCommands();
 
       if (status) {
-        dm_channel.send(`Slash command update success`);
+        dm_channel.send(`Slash command update ${UPDATE_GUILD_SLASH ? "to guild " : ""}success`);
       } else {
-        dm_channel.send("Slash command update failed");
+        dm_channel.send(`Slash command update ${UPDATE_GUILD_SLASH ? "to guild " : ""}failed`);
       }
     }
+
+    const settings = await getSettings();
+    dm_channel.send(`Loaded with settings:\`\`\`
+${JSON.stringify(settings, null, 2)}
+\`\`\``);
   } catch (error) {
     winston.info("Could not find admin user to send DM to");
   }
