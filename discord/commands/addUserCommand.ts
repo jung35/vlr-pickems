@@ -12,6 +12,8 @@ export const slash_command = new SlashCommandBuilder()
   .addStringOption((option) => option.setName("pickem").setDescription("URL of your pickem").setRequired(true));
 
 const pickem_url_reg = /^(https:\/\/|)(www.|)vlr.gg\/pickem\/(.[^-\\/]*)$/;
+const CHANNEL_ID = process.env.CHANNEL_ID as string;
+const GUILD_ID = process.env.GUILD_ID as string;
 
 export default async function addUserCommand(interaction: CommandInteraction): Promise<void> {
   const settings = await getSettings();
@@ -55,13 +57,30 @@ export default async function addUserCommand(interaction: CommandInteraction): P
     return;
   }
 
-  const pickem_data = { user_id: user.id, user: user.username, url: pickem_url, updated_at: new Date().toString() };
+  const pickem_data = {
+    user_id: user.id,
+    user: user.username,
+    url: pickem_url,
+    betting: false,
+    paid: false,
+    updated_at: new Date().toString(),
+  };
   winston.info(`Adding user's pickem to config`, pickem_data);
 
   try {
     await queueAddUser(pickem_data);
-    await interaction.editReply({ content: "now to do some buttons" });
+    await interaction.editReply({ content: "You're added!" });
   } catch (error) {
     await interaction.editReply({ content: "There was an error adding your pickems" });
+  }
+
+  try {
+    const guild = await interaction.client.guilds.fetch(GUILD_ID);
+    const channel = await guild.channels.fetch(CHANNEL_ID);
+    if (channel?.isText()) {
+      channel.send(`${user.username} joined the pickem!`);
+    }
+  } catch (error) {
+    winston.error("Could not find channel to message", error);
   }
 }

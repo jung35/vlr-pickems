@@ -22,7 +22,7 @@ export default function getBracket(
   const points = parseInt(status || "");
 
   return {
-    id: parseInt(id),
+    match_id: parseInt(id),
     next: { winner: next_id || undefined, loser: next_id2 || undefined },
     teams: [team1_id, team2_id],
     winner: team1_el.hasClass(selected) ? team1_id : team2_el.hasClass(selected) ? team2_id : -1,

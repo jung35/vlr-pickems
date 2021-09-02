@@ -28,7 +28,8 @@ export default async function slashCommand(interaction: CommandInteraction): Pro
 
 // prevent circular dependency
 const CLIENT_ID = process.env.CLIENT_ID as string;
-const GUILD_ID = process.env.GUILD_ID as null | string;
+const GUILD_ID = process.env.GUILD_ID as string;
+const UPDATE_GUILD_SLASH = process.env.UPDATE_GUILD_SLASH === "true";
 const rest = new REST({ version: "9" }).setToken(process.env.DISCORD_TOKEN);
 
 const commands_list = [stats_command, add_user_command, update_command, use_command, config_command, slash_command];
@@ -36,7 +37,7 @@ const commands_list = [stats_command, add_user_command, update_command, use_comm
 export async function updateSlashCommands(): Promise<boolean> {
   let url: string = Routes.applicationCommands(CLIENT_ID);
 
-  if (GUILD_ID) {
+  if (UPDATE_GUILD_SLASH) {
     url = Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID);
   }
 

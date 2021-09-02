@@ -1,7 +1,7 @@
 /// <reference path="../../support/index.d.ts" />
 
 import getBracket from "../../support/getBracket";
-import { UserPickemInfo, UserPickemBracketInfo } from "../../../discord/types";
+import { UserPickemInfo, UserPickemBracketInfo, LiveBracketGroup } from "../../../discord/types";
 
 describe("User Brackets", () => {
   it("clears out player bracket folder", () => {
@@ -14,20 +14,29 @@ describe("User Brackets", () => {
     it(`Get pickem created by ${pickem.user}`, () => {
       cy.visit(pickem.url);
 
-      const bracket: UserPickemBracketInfo[] = [];
+      const groups: LiveBracketGroup<UserPickemBracketInfo>[] = [];
 
-      cy.get(".bracket-item.mod-pickem")
-        .each((match_el, i) => {
-          const match_object: UserPickemBracketInfo = getBracket(match_el);
+      cy.get(".mod-bracket")
+        .each(($group) => {
+          const group_id = $group.find("div").get(3).getAttribute("id") as string;
+          const brackets: UserPickemBracketInfo[] = [];
 
-          cy.log(`UserBrackets Match #${i} match_object.teams`);
-          cy.log(`UserBrackets id ${match_object.id}, ${match_object.next}`);
-          cy.log(`UserBrackets Prediction: ${match_object.winner}`);
+          cy.wrap($group)
+            .get(".bracket-item.mod-pickem")
+            .each((match_el, j) => {
+              const match_object = getBracket(match_el) as UserPickemBracketInfo;
 
-          bracket.push(match_object);
+              cy.log(`UserBrackets Match #${j} match_object.teams`);
+              cy.log(`UserBrackets id ${match_object.match_id}, ${match_object.next}`);
+              cy.log(`UserBrackets Prediction: ${match_object.winner}`);
+
+              brackets.push(match_object);
+            });
+
+          groups.push({ group_id, bracket_list: brackets });
         })
         .then(() => {
-          cy.saveBracket(pickem.user, bracket);
+          cy.saveBracket(pickem.user, groups);
         });
     });
   });

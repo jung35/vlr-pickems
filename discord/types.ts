@@ -2,6 +2,8 @@ export interface UserPickemInfo {
   user_id: string;
   user: string;
   url: string;
+  betting: boolean;
+  paid: boolean;
   updated_at: string;
 }
 export interface AppSettings {
@@ -16,17 +18,22 @@ export interface ValorantTeam {
   name: string;
 }
 
+export interface LiveBracketGroup<BracketType> {
+  group_id: string;
+  bracket_list: BracketType[];
+}
+
 export interface LiveBracketInfo {
-  id: number;
-  next: { winner: number; loser: number };
+  match_id: number;
+  next: { winner: number | string; loser: number | string };
   teams: number[];
   winner: number;
   max_points: number;
 }
 
 export interface UserPickemBracketInfo {
-  id: number;
-  next: { winner: number | undefined; loser: number | undefined };
+  match_id: number;
+  next: { winner: number | string | undefined; loser: number | string | undefined };
   teams: number[];
   winner: number | undefined;
 }
