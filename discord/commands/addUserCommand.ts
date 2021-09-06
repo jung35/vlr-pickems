@@ -68,7 +68,9 @@ export default async function addUserCommand(interaction: CommandInteraction): P
 
   try {
     await queueAddUser(pickem_data);
-    await interaction.editReply({ content: "You're added!" });
+    await interaction.editReply({
+      content: "You're added! Wait a couple minutes before it shows up on `/stats` command",
+    });
   } catch (error) {
     await interaction.editReply({ content: "There was an error adding your pickems" });
 
@@ -83,5 +85,12 @@ export default async function addUserCommand(interaction: CommandInteraction): P
     }
   } catch (error) {
     winston.error("Could not find channel to message", error);
+  }
+
+  try {
+    await runCypress("pickems");
+  } catch (error) {
+    error;
+    // do nothing
   }
 }
