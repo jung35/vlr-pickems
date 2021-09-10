@@ -10,7 +10,9 @@ export default function getPickemStatsToString(stats_list: null | UserDisplaySta
       if (i > 0) {
         output += "\n";
       }
-      output += `${stats.user?.paid ? "💸 " : ""}**${stats.user?.user || "unknown_user"}** - ${stats.points}pts`;
+      output += `${stats.user?.paid ? "💸 " : ""}**${stats.user?.user || "unknown_user"}** – ${stats.points}pts – ${
+        stats.user?.url || "no_url"
+      }`;
     }
   }
 

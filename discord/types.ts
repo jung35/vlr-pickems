@@ -10,6 +10,7 @@ export interface AppSettings {
   config_dir: string;
   data_dir: string;
   allow_add_user: boolean;
+  // show_brackets: boolean; // ill implement this one day
 }
 
 export interface ValorantTeam {

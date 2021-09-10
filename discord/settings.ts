@@ -42,4 +42,5 @@ const default_settings: AppSettings = {
   config_dir: "config/",
   data_dir: "pickems_data/",
   allow_add_user: false,
+  // show_brackets: false,
 };

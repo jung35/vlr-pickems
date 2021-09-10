@@ -22,7 +22,7 @@ describe("User Brackets", () => {
           const brackets: UserPickemBracketInfo[] = [];
 
           cy.wrap($group)
-            .get(".bracket-item.mod-pickem")
+            .find(".bracket-item.mod-pickem")
             .each((match_el, j) => {
               const match_object = getBracket(match_el) as UserPickemBracketInfo;
 

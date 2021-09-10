@@ -15,7 +15,7 @@ describe("Tourney Pickems page", () => {
         const brackets: LiveBracketInfo[] = [];
 
         cy.wrap($group)
-          .get(".bracket-item.mod-pickem")
+          .find(".bracket-item.mod-pickem")
           .each((match_el, j) => {
             const match_object = getBracket(match_el, "original") as LiveBracketInfo;
 
